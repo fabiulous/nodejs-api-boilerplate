@@ -1,9 +1,12 @@
-import express from 'express';
+import { Router } from 'express';
+import module from './module';
 
-var router = express.Router();
+const routes  = Router();
 
-router.get('/',function (req, res) {
-            res.send('Success');
-    });
+routes.use('/module', module);
 
-export default router;
+routes.get('/', (req, res) => {
+  res.status(200).json({ message: 'Welcome to ou API!' });
+});
+
+export default routes;
