@@ -5,19 +5,20 @@ import bodyParser from 'body-parser';
 import errorHandler from 'errorhandler';
 import PrettyError from 'pretty-error';
 import dotenv from 'dotenv';
+import config from './config';
+import models from './models';
 import routes from './routes';
 
 dotenv.config({path: path.join(__dirname, '.env') });
 
-const ENV = process.env.NODE_ENV || 'development';
-const port = process.env.PORT || 8080;
+const ENV = config.environment;
+const port = config.port;
 
 const app = express();
 app.server = http.createServer(app);
 
-//
 // Register Node.js middleware
-// -----------------------------------------------------------------------------
+// =============================================================================
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -27,13 +28,13 @@ if (ENV === 'development') {
   app.use(errorHandler());
 }
 
-// REGISTER ROUTES -------------------------------
+// Register Routes
+// =============================================================================
 // all routes will be prefixed with /api
 app.use('/api', routes);
 
-//
 // Error handling
-// -----------------------------------------------------------------------------
+// =============================================================================
 if (ENV === 'development') {
   const pe = new PrettyError();
   pe.skipNodeFiles();
@@ -59,6 +60,10 @@ app.use((err, req, res, next) => {
 
 // START THE SERVER
 // =============================================================================
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+/* eslint-disable no-console */
+models.sync().catch(err => console.error(err.stack)).then(() => {
+  app.listen(port, () => {
+    console.log(`The server is running at http://localhost:${port}/`);
+  });
 });
+/* eslint-enable no-console */
