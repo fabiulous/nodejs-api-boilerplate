@@ -8,24 +8,98 @@
  */
 
 import sequelize from './sequelize';
-import Module from './Module';
+import Country from './Country';
+import Location from './Location';
+import Company from './Company';
+import JobOffer from './JobOffer';
+import Category from './Category';
+import ContractType from './ContractType';
+import ScheduleType from './ScheduleType';
+import Tag from './Tag';
 
 // You can define relations here.
 // =============================================================================
 
-// // USER
-// User.Posts = User.hasMany(Post, {
-//   foreignKey: 'userId',
-//   as: 'posts',
-//   onUpdate: 'cascade',
-//   onDelete: 'cascade',
-// });
-//
-// // POST
-// Post.User = Post.belongsTo(User, {
-//   foreignKey: 'userId',
-//   as: 'owner',
-// });
+// Country
+Country.Locations = Country.hasMany(Location, {
+  foreignKey: 'countryId',
+  as: 'locations',
+  onUpdate: 'cascade',
+  onDelete: 'cascade',
+});
+
+// Location
+Location.Country = Location.belongsTo(Country, {
+  foreignKey: 'countryId',
+  as: 'country',
+  foreignKey: {
+      allowNull: false
+  },
+});
+
+// Company
+Company.Offers = Company.hasMany(JobOffer, {
+  foreignKey: 'companyId',
+  as: 'offers',
+});
+
+// Job Offer
+JobOffer.Company = JobOffer.belongsTo(Company, {
+  foreignKey: 'companyId',
+  as: 'company',
+  foreignKey: {
+      allowNull: false
+  },
+});
+
+JobOffer.Category = JobOffer.belongsTo(Category, {
+  foreignKey: 'categoryId',
+  as: 'category',
+  foreignKey: {
+      allowNull: false
+  },
+});
+
+JobOffer.ContractType = JobOffer.belongsTo(ContractType, {
+  foreignKey: 'contractTypeId',
+  as: 'contractType',
+});
+
+JobOffer.ScheduleType = JobOffer.belongsTo(ScheduleType, {
+  foreignKey: 'scheduleTypeId',
+  as: 'scheduleType',
+});
+
+JobOffer.Tags = JobOffer.belongsToMany(Tag, {
+  foreignKey: 'tagId',
+  through: 'JobOffer_Tag',
+  as: 'tags',
+});
+
+// Category
+Category.Offers = Category.hasMany(JobOffer, {
+  foreignKey: 'categoryId',
+  as: 'offers',
+});
+
+// Contract Type
+ContractType.Offers = ContractType.hasMany(JobOffer, {
+  foreignKey: 'contractTypeId',
+  as: 'offers',
+});
+
+// Schedule Type
+ScheduleType.Offers = ScheduleType.hasMany(JobOffer, {
+  foreignKey: 'scheduleTypeId',
+  as: 'offers',
+});
+
+// Tag
+Tag.Offers = Tag.belongsToMany(JobOffer, {
+  foreignKey: 'jobOfferId',
+  through: 'JobOffer_Tag',
+  as: 'offers',
+});
 
 
 function sync(...args) {
@@ -33,4 +107,13 @@ function sync(...args) {
 }
 
 export default { sync };
-export { Module };
+export {
+  Country,
+  Location,
+  Company,
+  JobOffer,
+  Category,
+  ContractType,
+  ScheduleType,
+  Tag,
+ };

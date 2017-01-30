@@ -1,15 +1,11 @@
 import http from 'http';
-import path from 'path';
 import express from 'express';
 import bodyParser from 'body-parser';
 import errorHandler from 'errorhandler';
 import PrettyError from 'pretty-error';
-import dotenv from 'dotenv';
 import config from './config';
 import models from './models';
 import routes from './routes';
-
-dotenv.config({path: path.join(__dirname, '.env') });
 
 const ENV = config.environment;
 const port = config.port;
