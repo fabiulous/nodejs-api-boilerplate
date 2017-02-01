@@ -8,30 +8,20 @@
  */
 
 import sequelize from './sequelize';
-import Country from './Country';
 import Location from './Location';
 import Company from './Company';
 import JobOffer from './JobOffer';
 import Category from './Category';
-import ContractType from './ContractType';
-import ScheduleType from './ScheduleType';
 import Tag from './Tag';
 
 // You can define relations here.
 // =============================================================================
 
-// Country
-Country.Locations = Country.hasMany(Location, {
-  foreignKey: 'countryId',
-  as: 'locations',
-  onUpdate: 'cascade',
-  onDelete: 'cascade',
-});
-
 // Location
-Location.Country = Location.belongsTo(Country, {
-  foreignKey: 'countryId',
-  as: 'country',
+Location.JobOffers = Location.belongsToMany(JobOffer, {
+  foreignKey: 'jobOfferId',
+  through: 'JobOffer_Location',
+  as: 'offers',
   foreignKey: {
       allowNull: false
   },
@@ -44,6 +34,15 @@ Company.Offers = Company.hasMany(JobOffer, {
 });
 
 // Job Offer
+JobOffer.Locations = JobOffer.belongsToMany(Location, {
+  foreignKey: 'locationId',
+  through: 'JobOffer_Location',
+  as: 'locations',
+  foreignKey: {
+      allowNull: false
+  },
+});
+
 JobOffer.Company = JobOffer.belongsTo(Company, {
   foreignKey: 'companyId',
   as: 'company',
@@ -60,16 +59,6 @@ JobOffer.Category = JobOffer.belongsTo(Category, {
   },
 });
 
-JobOffer.ContractType = JobOffer.belongsTo(ContractType, {
-  foreignKey: 'contractTypeId',
-  as: 'contractType',
-});
-
-JobOffer.ScheduleType = JobOffer.belongsTo(ScheduleType, {
-  foreignKey: 'scheduleTypeId',
-  as: 'scheduleType',
-});
-
 JobOffer.Tags = JobOffer.belongsToMany(Tag, {
   foreignKey: 'tagId',
   through: 'JobOffer_Tag',
@@ -77,20 +66,8 @@ JobOffer.Tags = JobOffer.belongsToMany(Tag, {
 });
 
 // Category
-Category.Offers = Category.hasMany(JobOffer, {
+Category.JobOffers = Category.hasMany(JobOffer, {
   foreignKey: 'categoryId',
-  as: 'offers',
-});
-
-// Contract Type
-ContractType.Offers = ContractType.hasMany(JobOffer, {
-  foreignKey: 'contractTypeId',
-  as: 'offers',
-});
-
-// Schedule Type
-ScheduleType.Offers = ScheduleType.hasMany(JobOffer, {
-  foreignKey: 'scheduleTypeId',
   as: 'offers',
 });
 
@@ -108,12 +85,9 @@ function sync(...args) {
 
 export default { sync };
 export {
-  Country,
   Location,
   Company,
   JobOffer,
   Category,
-  ContractType,
-  ScheduleType,
   Tag,
  };

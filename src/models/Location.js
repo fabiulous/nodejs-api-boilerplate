@@ -18,6 +18,12 @@ const Location = Model.define('Location', {
     unique: true,
   },
 
+  countryCode: {
+    type: DataType.ENUM('PT', 'ES', 'FR', 'UK', 'DE', 'CH', 'BE', 'IE'), // List of countries we accept.
+    unique: true,
+    allowNull: false,
+  },
+
 }, {
 
   defaultScope: {

@@ -31,6 +31,15 @@ const JobOffer = Model.define('JobOffer', {
     },
   },
 
+  // No need to normalize the DB too much for data that will hardly ever change:
+  contractType: {
+    type: DataType.ENUM('EA', 'EP', 'PS', 'CT', 'CST'),
+  },
+
+  scheduleType: {
+    type: DataType.ENUM('PT', 'FT'), // PT: Part-Time; FT: Full-Time
+  },
+
 }, {
 
   defaultScope: {
