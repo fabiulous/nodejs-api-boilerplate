@@ -6,7 +6,7 @@ Written in ES6, using [Express.js](http://expressjs.com/) and [Sequelize.js](htt
 
 ## Development
 
-Run the server with `npm run serve`
+Run the server with `npm run dev`
 
 This will copy contents in src, create dist folder and serve the application.
 
