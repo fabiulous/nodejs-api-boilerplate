@@ -1,6 +1,8 @@
 import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import errorHandler from 'errorhandler';
 import PrettyError from 'pretty-error';
 import config from './config';
@@ -17,6 +19,8 @@ app.server = http.createServer(app);
 // =============================================================================
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(cors());
 
 if (ENV === 'development') {
   app.use(errorHandler({ dumpExceptions: true, showStack: true }));
